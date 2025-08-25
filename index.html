@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conway's Game of Life</title>
+    <link rel="stylesheet" href="conways-game-of-life.css">
+    <script src="conways-game-of-life.js" defer></script>
+</head>
+<body>
+    <h1>Welcome to Conway's Game of Life</h1>
+    <!--if you plan on fiddling with canvas size, it works best in multiples of ten, and make sure to hit the clear button to generate new boards.-->
+    <canvas id="gameCanvas" width="330" height="330"></canvas>
+    <div id="controls">
+        <button type="button" id="randomButton" onclick="randomizeBoard()">Randomize Board</button>
+        <!-- 
+        There is apparently not a way to seed the javascript random function that I know of, omitted the random seed feild. 
+        <label for="seed">Seed:</label>
+        <input type="number" id="seed" min="0" value="0">
+        -->
+        <button type="button" id="startButton" onclick="start()">Start</button>
+        <button type="button" id="stopButton" disabled onclick="stop()">Stop</button>
+        <button type="button" id="stepButton" onclick="step()">Step</button>
+        <button type="button" id="clearButton" onclick="clearBoard()">Clear</button>
+        <label for="speed">Speed:</label>
+        <input type="range" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
+    </div>
+</body>
+</html>

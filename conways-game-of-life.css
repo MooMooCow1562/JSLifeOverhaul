@@ -1,0 +1,51 @@
+/*Do I need to comment all of this?
+...
+No.
+...
+Probably will delete most of them later and add one general description for each styling.*/
+body {
+    background-color: slategray;
+    font-family: Arial, sans-serif; /* Sets a clean font for the page */
+}
+
+#gameCanvas {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#controls {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px; /* Adds some spacing between the canvas and controls */
+}
+
+#controls button {
+    margin: 5px 0; /* Adds some spacing between the buttons */
+    padding: 10px 20px; /* Increases the size of the buttons */
+    font-size: 16px; /* Increases the font size of the button text */
+    display: block; /* Ensures buttons are on separate lines */
+    border-radius: 8px; /* Rounds the corners of the buttons */
+}
+
+#controls button:enabled:hover {
+    background-color: lightgray;
+    cursor: pointer; /* Changes the cursor to a pointer when hovering over an active button */
+}
+
+#stopButton:enabled {
+    background-color: crimson; /* Sets the background color to crimson */
+}
+
+#stopButton:enabled:hover {
+    background-color: darkred !important; /* Changes the background color on hover */    
+    cursor: grab !important; /* Changes the cursor to an open palm */
+}
+
+#controls button:disabled {
+    background-color: gray; /* Changes the background color of disabled buttons */
+    cursor: not-allowed; /* Changes the cursor to indicate the button is disabled */
+}
+
+#speed:hover{
+    cursor: ew-resize;
+}
