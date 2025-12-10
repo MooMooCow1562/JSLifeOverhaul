@@ -1,44 +1,43 @@
-//Will replace the commenting with more robust descriptions later, like, block comments.
-
-//hardcoding cell values
+//instantiating variables.
 const alive = 2;
 const ghost = 1;
 const dead = 0;
-
-//hardcoding rules, I just need this to be conway's game of life, I can implement customizable rules another time.
 const live = [2, 3];
 const birth = [3];
-//conway's kernel, might allow people to implement custom kernels after this honors project is finished.
-const kernel = [[1, 1, 1], [1, 0, 1], [1, 1, 1]];
+const kernel = [[1, 1, 1,],
+                      [1, 0, 1,],
+                      [1, 1, 1]];
+const cellSize = 5;
+const livingColor = "#ffffff"; // Color of living cells
+const ghostColor = "#aaaaaa"; // Color of ghost cells
+const deadColor = "#000000"; // Color of dead cells
 
-//hardcoding the color values for now.
-var livingColor = "#ffffff"; // Color of living cells
-var ghostColor = "#aaaaaa"; // Color of ghost cells
-var deadColor = "#000000"; // Color of dead cells
+const canvas = document.getElementById("gameCanvas");
+const context = canvas.getContext("2d");
+let speed = 10;
 
-//before coding this version, I did not realize there were canvas like functions in UI systems, so I was using the equivelant of an
-//ass load of div elements, like, too many.
-//canvas-elements will be much better for this in future iterations.
-//get the canvas, create a context.
-var canvas = document.getElementById("gameCanvas");
-var context = canvas.getContext("2d");
+const gridHeight = Math.floor(canvas.height / cellSize);
+const gridWidth = Math.floor(canvas.width / cellSize);
 
-//may may cell size adjustable later, will need to be changed via a form input so we have to reload the entire application to change it.
-//cell size is in pixels
-var cellSize = 10;
+let currentGrid = create2dArray(gridWidth, gridHeight);
+let nextGrid = create2dArray(gridWidth, gridHeight);
+//hohohoh, le intervale.
+let interval;
 
-//fill the canvas with black, to represent the initial dead state of the game
 context.fillStyle = deadColor; // Background color
 context.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with the background color
 
-//our grids, Conway's game of life needs at least 2 grids and I beleive the names explan them.
-var currentGrid = create2dArray(canvas.width / cellSize, canvas.height / cellSize);
-var nextGrid = create2dArray(canvas.width / cellSize, canvas.height / cellSize);
+canvas.addEventListener("click", cellToggle);
+canvas.addEventListener("mouseover", cellHighlight);
+canvas.addEventListener("mousemove", cellHighlight);
+canvas.addEventListener("mouseleave", cellHighlight);
 
-//hardcoding speed for the moment.
-var speed = 10;
+document.getElementById("startButton").addEventListener("click", start)
+document.getElementById("stopButton").addEventListener("click", stop)
+document.getElementById("stopButton").disabled = true;
+document.getElementById("stepButton").addEventListener("click", step)
+document.getElementById("clearButton").addEventListener("click", clearBoard)
 
-//Need a 2D array, Javascript unfortunately does not have an easy way to make these so I'll just make a function to do it :D
 function create2dArray(length, height) {
     let arr = new Array(height);
     for (let i = 0; i < height; i++) {
@@ -50,28 +49,30 @@ function create2dArray(length, height) {
 //draws a cell, given two coordinates, starting from the flattened coordinates and ending at the flattened coordinate + cell size.
 //written to expect x and y values of a mouse clicking on the canvas, in other contexts like loops, I will need to multiply the coords by 10.
 function drawCell(x, y) {
-    normX = flattenCoordinate(x);
-    normY = flattenCoordinate(y);
-    if (currentGrid[normX / 10][normY / 10] == alive) {
+    let normX = flattenCoordinate(x);
+    let normY = flattenCoordinate(y);
+    if (Number(currentGrid[normY][normX]) === alive) {
         context.fillStyle = livingColor;
-    } else if (currentGrid[normX / 10][normY / 10] == ghost) {
+    } else if (Number(currentGrid[normY][normX]) === ghost) {
         context.fillStyle = ghostColor;
     } else {
         context.fillStyle = deadColor;
     }
-    context.fillRect(normY, normX, normY + cellSize, normX + cellSize);
+    normX *= cellSize;
+    normY *= cellSize;
+    context.fillRect(normX, normY, cellSize, cellSize);
 }
 
 //Takes a coordinate and rounds it to the 10ths place.
 function flattenCoordinate(v) {
-    return (Math.floor(v / cellSize)) * cellSize;
+    return (Math.floor(v));
 }
 
 function randomizeBoard() {
-    for (let i = 0; i < (canvas.height / cellSize); i++) {
-        for (let j = 0; j < (canvas.width / cellSize); j++) {
-            var newVal = Math.floor(Math.random() * 3);//a random value between 0 and 2, hopefully.
-            currentGrid[i][j] = newVal;
+    for (let i = 0; i < gridHeight; i++) {
+        for (let j = 0; j < gridWidth; j++) {
+            //a random value between 0 and 2, hopefully.
+            currentGrid[i][j] = Math.floor(Math.random() * 3);
         }
     }
     //draw the board after randomizing the boards.
@@ -80,50 +81,52 @@ function randomizeBoard() {
 
 //draws board separately from the computations for the board.
 function drawBoard() {
-    for (let i = 0; i < (canvas.height / cellSize); i++) {
-        for (let j = 0; j < (canvas.width / cellSize); j++) {
-            drawCell(i * 10, j * 10);
+    for (let y = 0; y < gridHeight; y++) {
+        for (let x = 0; x < gridWidth; x++) {
+            drawCell(x, y);
         }
     }
 }
 
 //simply resets the board, for the user.
 function clearBoard() {
-    currentGrid = create2dArray(canvas.width / cellSize, canvas.height / cellSize);
-    nextGrid = create2dArray(canvas.width / cellSize, canvas.height / cellSize);
+    //fuck clearing grids, create new ones.
+    currentGrid = create2dArray(gridWidth, gridHeight);
+    nextGrid = create2dArray(gridWidth, gridHeight);
     drawBoard();
 }
 
 //clone returns shallow copies of arrays in javascript, I will work around this with the following function:
 function cloneInto(into, cloneMe) {
     //for every entry in into, clone the value in the corresponding array in cloneMe.
-    for (let i = 0; i < (canvas.height / cellSize); i++) {
-        for (let j = 0; j < (canvas.width / cellSize); j++) {
-            into[i][j] = cloneMe[i][j] + "";
+    for (let y = 0; y < gridHeight; y++) {
+        for (let x = 0; x < gridWidth; x++) {
+            into[y][x] = cloneMe[y][x] + "";
         }
     }
 }
 
+
 function step() {
-    for (let i = 0; i < (canvas.height / cellSize); i++) {
-        for (let j = 0; j < (canvas.width / cellSize); j++) {
-            var shouldLive = false;
-            var shouldBirth = false;
+    for (let y = 0; y < gridHeight; y++) {
+        for (let x = 0; x < gridWidth; x++) {
+            let shouldLive = false;
+            let shouldBirth = false;
             //if the current cell is alive
-            if (currentGrid[i][j] == alive) {
-                //check to see if it should live into the next generation by cross referencing each of the rules for live.
-                var check = checkNeighbors(i, j);
+            if (Number(currentGrid[y][x]) === alive) {
+                //check to see if it should live into the next generation by cross-referencing each of the rules for live.
+                let check = checkNeighbors(x, y);
                 live.forEach(element => {
-                    if (check == element) {
+                    if (check === element) {
                         shouldLive = true;
                     }
                 });
                 //if current cell is dead or a ghost
-            } else if (currentGrid[i][j] != alive) {
-                //check to see if it should be born into the next generation by cross referencing each of the rules for birth.
-                var check = checkNeighbors(i, j);
+            } else if (Number(currentGrid[y][x]) !== alive) {
+                //check to see if it should be born into the next generation by cross-referencing each of the rules for birth.
+                let check = checkNeighbors(x, y);
                 birth.forEach(element => {
-                    if (check == element) {
+                    if (check === element) {
                         shouldBirth = true;
                     }
                 });
@@ -133,13 +136,13 @@ function step() {
             //if either should live or should birth are existent and true
             if (shouldLive || shouldBirth) {
                 //next generation's grid cell comes to life.
-                nextGrid[i][j] = alive;
-            } else if (currentGrid[i][j] > dead) {
-                //otherwise if I'm alive or a ghost, become a ghost, or dead repsectively.
-                nextGrid[i][j] = currentGrid[i][j] - 1;
+                nextGrid[y][x] = alive;
+            } else if (currentGrid[y][x] > dead) {
+                //otherwise if I'm alive or a ghost, become a ghost, or dead respectively.
+                nextGrid[y][x] = currentGrid[y][x] - 1;
             } else {
                 //otherwise, the dead stay dead.
-                nextGrid[i][j] = dead;
+                nextGrid[y][x] = dead;
             }
         }
     }
@@ -151,101 +154,92 @@ function step() {
 
 //this function checks nearby cells for living cells.
 function checkNeighbors(x, y) {
-    var livingNeighbors = 0;
-    var start;
-    var end;
+    let livingNeighbors = 0;
+    let start;
+    let end;
     //for odd kernels, do not weight the kernel direction.
-    if (kernel.length % 2 == 1) {
+    if (Number(kernel.length % 2) === 1) {
         start = Math.floor(kernel.length / 2);
     } else {//for even kernels, weight the kernel towards the bottom right.
-        //yes this is my answer for odd kernels and because I'm hardcoding this for the honors project, it will never be used. It's future proofing.
         start = Math.floor(kernel.length / 2) - 1;
     }
     end = Math.floor(kernel.length / 2);
 
-    for (let i = -start; i <= end; i++) {
-        for (let j = -start; j <= end; j++) {
-            //if the kernel has a value other then 0 and the current cell being looked at is alive
-            if ((kernel[i + start][j + start] != 0) && (currentGrid[wrap(x + j, canvas.height / cellSize)][wrap(y + i, canvas.width / cellSize)] == alive)) {
+    for (let y1 = -start; y1 <= end; y1++) {
+        for (let x1 = -start; x1 <= end; x1++) {
+            //if the kernel has a value other than 0 and the current cell being looked at is alive
+            if ((Number(kernel[y1 + start][x1 + start]) !== 0) && (Number(currentGrid[wrap(y1 + y, gridHeight)][wrap(x1 + x, gridWidth)]) === alive)) {
                 livingNeighbors++;//increment living neighbors.
             }
         }
     }
-    return livingNeighbors;
+    return Number(livingNeighbors);
 }
 
 function wrap(value, dimension) {
-    //if the value is too small,
-    if (value < 0) {//wrap to the right.
-        return value + dimension;
-    }
-    //if value is too big
-    if (value >= dimension) {//wrap to the left.
-        return value - dimension;
-    }
-    //otherwise, return the value.
-    return value;
+    return (Number(value+dimension)%dimension);
 }
 
-//the interval.
-var interval;
-//starts the game
 function start() {
     console.log("Game Started");
     interval = setInterval(step, 1000 / speed);
     document.getElementById("startButton").disabled = true;
     document.getElementById("stopButton").disabled = false;
 }
-//ends it
+
 function stop() {
     console.log("Game Stopped");
     clearInterval(interval);
+    interval = null;
     document.getElementById("startButton").disabled = false;
     document.getElementById("stopButton").disabled = true;
 }
+
 function changeSpeed(value) {
     speed = value;
+    if (interval) {
+        stop();
+        start();
+    }
 }
-
-canvas.addEventListener("click", cellToggle);
-canvas.addEventListener("mousemove", cellHighlight);
-canvas.addEventListener("mouseleave", cellHighlight);
 
 //allows you to actually toggle cells.
 function cellToggle(e) {
-    var bound = canvas.getBoundingClientRect();
-    var c1 = flattenCoordinate(e.clientY - bound.top) / 10;
-    var c2 = flattenCoordinate(e.clientX - bound.left) / 10;
-    //console.log(c1+" "+c2);
-    currentGrid[c1][c2]--;
-    if (currentGrid[c1][c2] < 0) {
-        currentGrid[c1][c2] = 2;
+    let bound = canvas.getBoundingClientRect();
+    let y1 = flattenCoordinate((e.clientY - bound.top)/cellSize);
+    let x1 = flattenCoordinate((e.clientX - bound.left)/cellSize);
+    //console.log(y1+" "+x1);
+    currentGrid[y1][x1]--;
+    if (currentGrid[y1][x1] < 0) {
+        currentGrid[y1][x1] = 2;
     }
     drawBoard();
     cellHighlight(e);
 }
 
-//allows you to actually highlight cells.
+//highlights the board and what cell you're editing on the board.
 function cellHighlight(e) {
-    //clears prior movments instead of letting them sit in place.
     drawBoard();
-    var bound = canvas.getBoundingClientRect();
+    let bound = canvas.getBoundingClientRect();
     if ((e.clientY - bound.top < canvas.height && e.clientX - bound.left < canvas.width) && (e.clientY - bound.top > 0 && e.clientX - bound.left > 0)) {
-        var c1 = flattenCoordinate(e.clientX - bound.left);
-        var c2 = flattenCoordinate(e.clientY - bound.top);
-        //also gonna make an overlay to show what column and row you're on.
-        context.strokeStyle = "#ff0000";
-        context.strokeRect(0, c2, canvas.width, cellSize);
-        context.strokeRect(c1, 0, cellSize, canvas.height);
+        let x1 = flattenCoordinate((e.clientX - bound.left)/cellSize)*cellSize;
+        let y1 = flattenCoordinate((e.clientY - bound.top)/cellSize)*cellSize;
 
-        //draws the initial highlight, twice, because once isn't enough.
+        context.strokeStyle = "#ff0000";
+        context.strokeRect(0, y1, canvas.width, cellSize);
+        context.strokeRect(x1, 0, cellSize, canvas.height);
+        context.strokeRect(0, y1, canvas.width, cellSize);
+        context.strokeRect(x1, 0, cellSize, canvas.height);
+
         context.strokeStyle = "#0000ff";
-        context.strokeRect(c1, c2, cellSize, cellSize);
-        context.strokeRect(c1, c2, cellSize, cellSize);
+        context.strokeRect(x1, y1, cellSize, cellSize);
+        context.strokeRect(x1, y1, cellSize, cellSize);
 
         //create an overlay on the board to indicate "I'm being edited!"
         context.strokeStyle = "#00ff00";
-        context.strokeRect(0,0, canvas.width-1, canvas.height-1);
-        context.strokeRect(1,1, canvas.width-2, canvas.height-2);
+        context.strokeRect(0, 0, canvas.width - 1, canvas.height - 1);
+        context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+        context.strokeRect(0, 0, canvas.width - 1, canvas.height - 1);
+        context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
     }
 }
