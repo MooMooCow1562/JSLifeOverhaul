@@ -37,6 +37,10 @@ body {
     cursor: grab !important;
 }
 
+canvas:hover{
+    cursor: none;
+}
+
 #controls button:disabled {
     background-color: gray;
     cursor: not-allowed;
