@@ -49,3 +49,16 @@ canvas:hover{
 #speed:hover{
     cursor: ew-resize;
 }
+#brushKernel{
+    display: block;
+    border-top-color: #777;
+    border-left-color: #777;
+    border-bottom-color: black;
+    border-right-color: black;
+    border-style: solid;
+    border-radius: 8px;
+    border-width: 2px;
+    background-color: #aaa;
+    width: fit-content;
+    height: fit-content;
+}

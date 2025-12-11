@@ -8,9 +8,9 @@ const kernel = [[1, 1, 1,],
                       [1, 0, 1,],
                       [1, 1, 1]];
 const cellSize = 5;
-const livingColor = "#ffffff"; // Color of living cells
-const ghostColor = "#aaaaaa"; // Color of ghost cells
-const deadColor = "#000000"; // Color of dead cells
+const livingColor = "#fff"; // Color of living cells
+const ghostColor = "#aaa"; // Color of ghost cells
+const deadColor = "#000"; // Color of dead cells
 
 const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
@@ -23,6 +23,7 @@ let currentGrid = create2dArray(gridWidth, gridHeight);
 let nextGrid = create2dArray(gridWidth, gridHeight);
 //hohohoh, le intervale.
 let interval;
+let brushGrid;
 
 context.fillStyle = deadColor; // Background color
 context.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with the background color
@@ -209,10 +210,33 @@ function cellToggle(e) {
     let y1 = flattenCoordinate((e.clientY - bound.top)/cellSize);
     let x1 = flattenCoordinate((e.clientX - bound.left)/cellSize);
     //console.log(y1+" "+x1);
-    currentGrid[y1][x1]--;
-    if (currentGrid[y1][x1] < 0) {
-        currentGrid[y1][x1] = 2;
+    brushGrid = document.getElementById("brushKernel").getElementsByTagName("input");
+    //create the grid on the fly-
+    let grid = create2dArray(Math.sqrt(brushGrid.length),Math.sqrt(brushGrid.length));
+    for (const cell of brushGrid) {
+        //grab the x coordinate of the item.
+        let x = Number(cell.id.split("x").at(1).split("y").at(0))
+        //grab the y coordinate of the item.
+        let y =  Number(cell.id.split("y").at(1));
+        if(cell.checked === true){
+            grid[y][x] = 1;
+        }else{
+            grid[y][x] = 0;
+        }
     }
+    //and check to see where I must write to it.
+    for(let y = 0; y < Math.sqrt(brushGrid.length); y++) {
+        for (let x = 0; x < Math.sqrt(brushGrid.length); x++) {
+            if(Number(grid[y][x]) === 1){
+
+                currentGrid[wrap(y1+(y-1),gridHeight)][wrap(x1+(x-1),gridWidth)]--;
+                if (currentGrid[wrap(y1+(y-1),gridHeight)][wrap(x1+(x-1),gridWidth)] < 0) {
+                    currentGrid[wrap(y1+(y-1),gridHeight)][wrap(x1+(x-1),gridWidth)] = 2;
+                }
+            }
+        }
+    }
+
     drawBoard();
     cellHighlight(e);
 }
