@@ -3,51 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conway's Game of Life</title>
+    <title>Conway's Game of Life..?</title>
     <link rel="stylesheet" href="conways-game-of-life.css">
     <script src="conways-game-of-life.js" defer></script>
 </head>
 <body>
-    <h1>Welcome to Conway's Game of Life</h1>
-    <!--if you plan on fiddling with canvas size, it works best in multiples of ten, and make sure to hit the clear button to generate new boards.-->
-    <canvas id="gameCanvas" width="1210" height="660"></canvas>
-    <div id="controls">
-        <button type="button" id="randomButton" onclick="randomizeBoard()">Randomize Board</button>
-        <!-- 
-        There is apparently not a way to seed the javascript random function that I know of, omitted the random seed feild. 
-        <label for="seed">Seed:</label>
-        <input type="number" id="seed" min="0" value="0">
-        -->
-        <button type="button" id="startButton">Start</button>
-        <button type="button" id="stopButton">Stop</button>
-        <button type="button" id="stepButton">Step</button>
-        <button type="button" id="clearButton">Clear</button>
-        <label for="speed">Speed:</label>
-        <input type="range" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
+<h1>Welcome to Conway's Game of Life..?</h1>
+<!-- if you plan on fiddling with canvas size, it works best in multiples of ten, and make sure to hit the clear button to generate new boards. -->
+<canvas id="gameCanvas" width="1210" height="660"></canvas>
+<div id="controls">
+    <!--
+    basic controls
+    -->
+    <button type="button" id="randomButton" onclick="randomizeBoard()">Randomize Board</button>
+    <button type="button" id="startButton">Start</button>
+    <button type="button" id="stopButton">Stop</button>
+    <button type="button" id="stepButton">Step</button>
+    <button type="button" id="clearButton">Clear</button>
+    <label for="speed">Speed:</label>
+    <input type="range" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
+    <br>
+    <label for="brushKernel">Brush shape:</label>
+    <!--
+    Modifies the brush kernel
+    -->
+    <div id="brushKernel">
+        <input type="checkbox" id="x0y0">
+        <input type="checkbox" id="x1y0">
+        <input type="checkbox" id="x2y0">
         <br>
-        <label for="brushKernel">Brush shape:</label>
-        <div id="brushKernel">
-            <input type="checkbox" id = "x0y0">
-            <input type="checkbox" id = "x1y0">
-            <input type="checkbox" id = "x2y0">
-            <br>
-            <input type="checkbox" id = "x0y1">
-            <input type="checkbox" id = "x1y1" checked>
-            <input type="checkbox" id = "x2y1">
-            <br>
-            <input type="checkbox" id = "x0y2">
-            <input type="checkbox" id = "x1y2">
-            <input type="checkbox" id = "x2y2">
-        </div>
-        <label for="x0y0" hidden="hidden">_|</label>
-        <label for="x1y0" hidden="hidden">_|</label>
-        <label for="x2y0" hidden="hidden">_|</label>
-        <label for="x0y1" hidden="hidden">_|</label>
-        <label for="x1y1" hidden="hidden">_|</label>
-        <label for="x2y1" hidden="hidden">_|</label>
-        <label for="x0y2" hidden="hidden">_|</label>
-        <label for="x1y2" hidden="hidden">_|</label>
-        <label for="x2y2" hidden="hidden">_|</label>
+        <input type="checkbox" id="x0y1">
+        <input type="checkbox" id="x1y1" checked>
+        <input type="checkbox" id="x2y1">
+        <br>
+        <input type="checkbox" id="x0y2">
+        <input type="checkbox" id="x1y2">
+        <input type="checkbox" id="x2y2">
     </div>
+    <label for="x0y0" hidden="hidden">_|</label>
+    <label for="x1y0" hidden="hidden">_|</label>
+    <label for="x2y0" hidden="hidden">_|</label>
+    <label for="x0y1" hidden="hidden">_|</label>
+    <label for="x1y1" hidden="hidden">_|</label>
+    <label for="x2y1" hidden="hidden">_|</label>
+    <label for="x0y2" hidden="hidden">_|</label>
+    <label for="x1y2" hidden="hidden">_|</label>
+    <label for="x2y2" hidden="hidden">_|</label>
+    <!--
+    Modifies the life kernel
+    -->
+    <label for="kernelKernel">Kernel shape:</label>
+    <div id="kernelKernel">
+        <input type="checkbox" id="kx0ky0" checked>
+        <input type="checkbox" id="kx1ky0" checked>
+        <input type="checkbox" id="kx2ky0" checked>
+        <br>
+        <input type="checkbox" id="kx0ky1" checked>
+        <input type="checkbox" id="kx1ky1">
+        <input type="checkbox" id="kx2ky1" checked>
+        <br>
+        <input type="checkbox" id="kx0ky2" checked>
+        <input type="checkbox" id="kx1ky2" checked>
+        <input type="checkbox" id="kx2ky2" checked>
+    </div>
+    <label for="kx0ky0" hidden="hidden">_|</label>
+    <label for="kx1ky0" hidden="hidden">_|</label>
+    <label for="kx2ky0" hidden="hidden">_|</label>
+    <label for="kx0ky1" hidden="hidden">_|</label>
+    <label for="kx1ky1" hidden="hidden">_|</label>
+    <label for="kx2ky1" hidden="hidden">_|</label>
+    <label for="kx0ky2" hidden="hidden">_|</label>
+    <label for="kx1ky2" hidden="hidden">_|</label>
+    <label for="kx2ky2" hidden="hidden">_|</label>
+</div>
 </body>
 </html>

@@ -49,7 +49,7 @@ canvas:hover{
 #speed:hover{
     cursor: ew-resize;
 }
-#brushKernel{
+#brushKernel, #kernelKernel{
     display: block;
     border-top-color: #777;
     border-left-color: #777;

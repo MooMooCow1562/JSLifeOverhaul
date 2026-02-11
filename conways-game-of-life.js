@@ -4,9 +4,6 @@ const ghost = 1;
 const dead = 0;
 const live = [2, 3];
 const birth = [3];
-const kernel = [[1, 1, 1,],
-                      [1, 0, 1,],
-                      [1, 1, 1]];
 const cellSize = 5;
 const livingColor = "#fff"; // Color of living cells
 const ghostColor = "#aaa"; // Color of ghost cells
@@ -24,6 +21,7 @@ let nextGrid = create2dArray(gridWidth, gridHeight);
 //hohohoh, le intervale.
 let interval;
 let brushGrid;
+let kernelGrid;
 
 context.fillStyle = deadColor; // Background color
 context.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with the background color
@@ -38,6 +36,9 @@ document.getElementById("stopButton").addEventListener("click", stop)
 document.getElementById("stopButton").disabled = true;
 document.getElementById("stepButton").addEventListener("click", step)
 document.getElementById("clearButton").addEventListener("click", clearBoard)
+document.getElementById("kernelKernel").addEventListener("click", updateKernel)
+
+updateKernel();
 
 function create2dArray(length, height) {
     let arr = new Array(height);
@@ -153,23 +154,42 @@ function step() {
     drawBoard();
 }
 
+function updateKernel() {
+    kernelGrid = document.getElementById("kernelKernel").getElementsByTagName("input");
+
+    let grid = create2dArray(Math.sqrt(kernelGrid.length), Math.sqrt(kernelGrid.length));
+    for (const cell of kernelGrid) {
+        //grab the x coordinate of the item.
+        let x = Number(cell.id.split("kx").at(1).split("ky").at(0))
+        //grab the y coordinate of the item.
+        let y = Number(cell.id.split("ky").at(1));
+        if (cell.checked === true) {
+            grid[y][x] = 1;
+        } else {
+            grid[y][x] = 0;
+        }
+    }
+    kernelGrid=grid;
+}
+
 //this function checks nearby cells for living cells.
 function checkNeighbors(x, y) {
     let livingNeighbors = 0;
     let start;
     let end;
+
     //for odd kernels, do not weight the kernel direction.
-    if (Number(kernel.length % 2) === 1) {
-        start = Math.floor(kernel.length / 2);
+    if (Number(kernelGrid.length % 2) === 1) {
+        start = Math.floor(kernelGrid.length / 2);
     } else {//for even kernels, weight the kernel towards the bottom right.
-        start = Math.floor(kernel.length / 2) - 1;
+        start = Math.floor(kernelGrid.length / 2) - 1;
     }
-    end = Math.floor(kernel.length / 2);
+    end = Math.floor(kernelGrid.length / 2);
 
     for (let y1 = -start; y1 <= end; y1++) {
         for (let x1 = -start; x1 <= end; x1++) {
             //if the kernel has a value other than 0 and the current cell being looked at is alive
-            if ((Number(kernel[y1 + start][x1 + start]) !== 0) && (Number(currentGrid[wrap(y1 + y, gridHeight)][wrap(x1 + x, gridWidth)]) === alive)) {
+            if ((Number(kernelGrid[y1 + start][x1 + start]) !== 0) && (Number(currentGrid[wrap(y1 + y, gridHeight)][wrap(x1 + x, gridWidth)]) === alive)) {
                 livingNeighbors++;//increment living neighbors.
             }
         }
