@@ -38,6 +38,10 @@ document.getElementById("stepButton").addEventListener("click", step)
 document.getElementById("clearButton").addEventListener("click", clearBoard)
 document.getElementById("kernelKernel").addEventListener("click", updateKernel)
 
+for (const viewButton of document.getElementById("moveViewport").getElementsByTagName("input")) {
+    viewButton.addEventListener("click", shiftViewport)
+}
+
 updateKernel();
 
 function create2dArray(length, height) {
@@ -98,7 +102,7 @@ function clearBoard() {
     drawBoard();
 }
 
-//clone returns shallow copies of arrays in javascript, I will work around this with the following function:
+//clone returns shallow copies of arrays in JavaScript, I will work around this with the following function:
 function cloneInto(into, cloneMe) {
     //for every entry in into, clone the value in the corresponding array in cloneMe.
     for (let y = 0; y < gridHeight; y++) {
@@ -160,9 +164,9 @@ function updateKernel() {
     let grid = create2dArray(Math.sqrt(kernelGrid.length), Math.sqrt(kernelGrid.length));
     for (const cell of kernelGrid) {
         //grab the x coordinate of the item.
-        let x = Number(cell.id.split("kx").at(1).split("ky").at(0))
+        let x = Number(cell.id.split("kx").at(1).split("y").at(0))
         //grab the y coordinate of the item.
-        let y = Number(cell.id.split("ky").at(1));
+        let y = Number(cell.id.split("y").at(1));
         if (cell.checked === true) {
             grid[y][x] = 1;
         } else {
@@ -202,14 +206,12 @@ function wrap(value, dimension) {
 }
 
 function start() {
-    console.log("Game Started");
     interval = setInterval(step, 1000 / speed);
     document.getElementById("startButton").disabled = true;
     document.getElementById("stopButton").disabled = false;
 }
 
 function stop() {
-    console.log("Game Stopped");
     clearInterval(interval);
     interval = null;
     document.getElementById("startButton").disabled = false;
@@ -285,5 +287,57 @@ function cellHighlight(e) {
         context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
         context.strokeRect(0, 0, canvas.width - 1, canvas.height - 1);
         context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+    }
+}
+
+function shift(into, cloneMe, xOffset, yOffset) {
+    //for every entry in into, clone the value in the corresponding array in cloneMe.
+    for (let y = 0; y < gridHeight; y++) {
+        for (let x = 0; x < gridWidth; x++) {
+            into[y][x] = cloneMe[wrap(y+yOffset, gridHeight)][wrap(x+xOffset, gridWidth)] + "";
+        }
+    }
+    cloneInto(cloneMe, into)
+}
+
+function shiftViewport(event){
+    let id = event.target.id
+    let stoppedByMe = false
+    if (interval){
+        stop()
+        stoppedByMe = true
+    }
+    switch (id){
+        case "vx0y0":
+            shift(nextGrid, currentGrid, -1, -1)
+            break;
+        case "vx0y1":
+            shift(nextGrid, currentGrid, -1, 0)
+            break;
+        case "vx0y2":
+            shift(nextGrid, currentGrid, -1, 1)
+            break;
+        case "vx1y0":
+            shift(nextGrid, currentGrid, 0, -1)
+            break;
+        case "vx1y1":
+            console.error("unexpected event!")
+            break;
+        case "vx1y2":
+            shift(nextGrid, currentGrid, 0, 1)
+            break;
+        case "vx2y0":
+            shift(nextGrid, currentGrid, 1, -1)
+            break;
+        case "vx2y1":
+            shift(nextGrid, currentGrid, 1, 0)
+            break;
+        case "vx2y2":
+            shift(nextGrid, currentGrid, 1, 1)
+            break;
+    }
+    drawBoard()
+    if (!interval && stoppedByMe){
+        start()
     }
 }

@@ -21,13 +21,13 @@
     <button type="button" id="stepButton">Step</button>
     <button type="button" id="clearButton">Clear</button>
     <label for="speed">Speed:</label>
-    <input type="range" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
+    <input type="number" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
     <br>
     <label for="brushKernel">Brush shape:</label>
     <!--
     Modifies the brush kernel
     -->
-    <div id="brushKernel">
+    <div id="brushKernel" class="buttonContainer">
         <input type="checkbox" id="x0y0">
         <input type="checkbox" id="x1y0">
         <input type="checkbox" id="x2y0">
@@ -53,28 +53,54 @@
     Modifies the life kernel
     -->
     <label for="kernelKernel">Kernel shape:</label>
-    <div id="kernelKernel">
-        <input type="checkbox" id="kx0ky0" checked>
-        <input type="checkbox" id="kx1ky0" checked>
-        <input type="checkbox" id="kx2ky0" checked>
+    <div id="kernelKernel" class="buttonContainer">
+        <input type="checkbox" id="kx0y0" checked>
+        <input type="checkbox" id="kx1y0" checked>
+        <input type="checkbox" id="kx2y0" checked>
         <br>
-        <input type="checkbox" id="kx0ky1" checked>
-        <input type="checkbox" id="kx1ky1">
-        <input type="checkbox" id="kx2ky1" checked>
+        <input type="checkbox" id="kx0y1" checked>
+        <input type="checkbox" id="kx1y1">
+        <input type="checkbox" id="kx2y1" checked>
         <br>
-        <input type="checkbox" id="kx0ky2" checked>
-        <input type="checkbox" id="kx1ky2" checked>
-        <input type="checkbox" id="kx2ky2" checked>
+        <input type="checkbox" id="kx0y2" checked>
+        <input type="checkbox" id="kx1y2" checked>
+        <input type="checkbox" id="kx2y2" checked>
     </div>
-    <label for="kx0ky0" hidden="hidden">_|</label>
-    <label for="kx1ky0" hidden="hidden">_|</label>
-    <label for="kx2ky0" hidden="hidden">_|</label>
-    <label for="kx0ky1" hidden="hidden">_|</label>
-    <label for="kx1ky1" hidden="hidden">_|</label>
-    <label for="kx2ky1" hidden="hidden">_|</label>
-    <label for="kx0ky2" hidden="hidden">_|</label>
-    <label for="kx1ky2" hidden="hidden">_|</label>
-    <label for="kx2ky2" hidden="hidden">_|</label>
+    <label for="kx0y0" hidden="hidden">_|</label>
+    <label for="kx1y0" hidden="hidden">_|</label>
+    <label for="kx2y0" hidden="hidden">_|</label>
+    <label for="kx0y1" hidden="hidden">_|</label>
+    <label for="kx1y1" hidden="hidden">_|</label>
+    <label for="kx2y1" hidden="hidden">_|</label>
+    <label for="kx0y2" hidden="hidden">_|</label>
+    <label for="kx1y2" hidden="hidden">_|</label>
+    <label for="kx2y2" hidden="hidden">_|</label>
+    <!--
+    Moves the view-port.
+    -->
+    <label for="moveViewport">Move Viewport:</label>
+    <div id="moveViewport" class="buttonContainer">
+        <input type="button" id="vx0y0" value="•">
+        <input type="button" id="vx1y0" value="∧">
+        <input type="button" id="vx2y0" value="•">
+        <br>
+        <input type="button" id="vx0y1" value="<">
+        <input type="button" id="vx1y1" value="•" disabled>
+        <input type="button" id="vx2y1" value=">">
+        <br>
+        <input type="button" id="vx0y2" value="•">
+        <input type="button" id="vx1y2" value="ⅴ">
+        <input type="button" id="vx2y2" value="•">
+    </div>
+    <label for="vx0y0" hidden="hidden">_|</label>
+    <label for="vx1y0" hidden="hidden">_|</label>
+    <label for="vx2y0" hidden="hidden">_|</label>
+    <label for="vx0y1" hidden="hidden">_|</label>
+    <label for="vx1y1" hidden="hidden">_|</label>
+    <label for="vx2y1" hidden="hidden">_|</label>
+    <label for="vx0y2" hidden="hidden">_|</label>
+    <label for="vx1y2" hidden="hidden">_|</label>
+    <label for="vx2y2" hidden="hidden">_|</label>
 </div>
 </body>
 </html>

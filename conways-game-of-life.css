@@ -46,10 +46,7 @@ canvas:hover{
     cursor: not-allowed;
 }
 
-#speed:hover{
-    cursor: ew-resize;
-}
-#brushKernel, #kernelKernel{
+.buttonContainer{
     display: block;
     border-top-color: #777;
     border-left-color: #777;
@@ -61,4 +58,11 @@ canvas:hover{
     background-color: #aaa;
     width: fit-content;
     height: fit-content;
+}
+#moveViewport input {
+    width: 1.5em;
+    height: 1.5em;
+}
+#moveViewport {
+    padding: 0.25em;
 }
