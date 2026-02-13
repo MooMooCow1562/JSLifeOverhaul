@@ -46,7 +46,7 @@ canvas:hover{
     cursor: not-allowed;
 }
 
-.buttonContainer{
+.buttonContainer, .numPad{
     display: block;
     border-top-color: #777;
     border-left-color: #777;
@@ -65,4 +65,10 @@ canvas:hover{
 }
 #moveViewport {
     padding: 0.25em;
+}
+.numPad input{
+    margin-left: -0.25em !important;
+}
+.firstNum {
+    margin-left: 4px;
 }

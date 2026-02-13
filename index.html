@@ -23,10 +23,10 @@
     <label for="speed">Speed:</label>
     <input type="number" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
     <br>
-    <label for="brushKernel">Brush shape:</label>
     <!--
     Modifies the brush kernel
     -->
+    <div>Brush shape:</div>
     <div id="brushKernel" class="buttonContainer">
         <input type="checkbox" id="x0y0">
         <input type="checkbox" id="x1y0">
@@ -52,7 +52,7 @@
     <!--
     Modifies the life kernel
     -->
-    <label for="kernelKernel">Kernel shape:</label>
+    <div>Kernel shape:</div>
     <div id="kernelKernel" class="buttonContainer">
         <input type="checkbox" id="kx0y0" checked>
         <input type="checkbox" id="kx1y0" checked>
@@ -78,7 +78,7 @@
     <!--
     Moves the view-port.
     -->
-    <label for="moveViewport">Move Viewport:</label>
+    <div>Move Viewport:</div>
     <div id="moveViewport" class="buttonContainer">
         <input type="button" id="vx0y0" value="•">
         <input type="button" id="vx1y0" value="∧">
@@ -102,5 +102,59 @@
     <label for="vx1y2" hidden="hidden">_|</label>
     <label for="vx2y2" hidden="hidden">_|</label>
 </div>
+<br>
+<table>
+    <tr>
+        <!--
+        <th>
+            <div>Death by Moshing:</div>
+            <div id="numPadDeath" class="numPad">
+                <label for="d0" class="firstNum">0:</label> <input type="checkbox" id="d0">
+                <label for="d1">1:</label> <input type="checkbox" id="d1">
+                <label for="d2">2:</label> <input type="checkbox" id="d2">
+                <label for="d3">3:</label> <input type="checkbox" id="d3">
+                <label for="d4">4:</label> <input type="checkbox" id="d4">
+                <label for="d5">5:</label> <input type="checkbox" id="d5">
+                <label for="d6">6:</label> <input type="checkbox" id="d6">
+                <label for="d7">7:</label> <input type="checkbox" id="d7">
+                <label for="d8">8:</label> <input type="checkbox" id="d8">
+                <label for="d9">9:</label> <input type="checkbox" id="d9">
+            </div>
+        </th>
+        -->
+        <th>
+            <div>Live by Moshing:</div>
+            <div id="numPadLive" class="numPad">
+                <label for="l0" class="firstNum">0:</label> <input type="checkbox" id="l0">
+                <label for="l1">1:</label> <input type="checkbox" id="l1">
+                <label for="l2">2:</label> <input type="checkbox" id="l2" checked>
+                <label for="l3">3:</label> <input type="checkbox" id="l3" checked>
+                <label for="l4">4:</label> <input type="checkbox" id="l4">
+                <label for="l5">5:</label> <input type="checkbox" id="l5">
+                <label for="l6">6:</label> <input type="checkbox" id="l6">
+                <label for="l7">7:</label> <input type="checkbox" id="l7">
+                <label for="l8">8:</label> <input type="checkbox" id="l8">
+                <label for="l9">9:</label> <input type="checkbox" id="l9">
+            </div>
+        </th>
+        <th>
+            <div>Birth by Moshing:</div>
+            <div id="numPadBirth" class="numPad">
+                <label for="b0" class="firstNum">0:</label> <input type="checkbox" id="b0">
+                <label for="b1">1:</label> <input type="checkbox" id="b1">
+                <label for="b2">2:</label> <input type="checkbox" id="b2">
+                <label for="b3">3:</label> <input type="checkbox" id="b3" checked>
+                <label for="b4">4:</label> <input type="checkbox" id="b4">
+                <label for="b5">5:</label> <input type="checkbox" id="b5">
+                <label for="b6">6:</label> <input type="checkbox" id="b6">
+                <label for="b7">7:</label> <input type="checkbox" id="b7">
+                <label for="b8">8:</label> <input type="checkbox" id="b8">
+                <label for="b9">9:</label> <input type="checkbox" id="b9">
+            </div>
+        </th>
+    </tr>
+</table>
+<br>
+<br>
 </body>
 </html>

@@ -2,12 +2,10 @@
 const alive = 2;
 const ghost = 1;
 const dead = 0;
-const live = [2, 3];
-const birth = [3];
 const cellSize = 5;
-const livingColor = "#fff"; // Color of living cells
-const ghostColor = "#aaa"; // Color of ghost cells
-const deadColor = "#000"; // Color of dead cells
+const livingColor = "#666"; // Color of living cells
+const ghostColor = "#333"; // Color of ghost cells
+const deadColor = "#222"; // Color of dead cells
 
 const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
@@ -22,6 +20,8 @@ let nextGrid = create2dArray(gridWidth, gridHeight);
 let interval;
 let brushGrid;
 let kernelGrid;
+let live= [];
+let birth = [];
 
 context.fillStyle = deadColor; // Background color
 context.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with the background color
@@ -38,6 +38,11 @@ document.getElementById("stepButton").addEventListener("click", step)
 document.getElementById("clearButton").addEventListener("click", clearBoard)
 document.getElementById("kernelKernel").addEventListener("click", updateKernel)
 
+document.getElementById("numPadBirth").addEventListener("click", modifyRules)
+document.getElementById("numPadLive").addEventListener("click", modifyRules)
+document.getElementById("numPadBirth").addEventListener("mouseleave", modifyRules)
+document.getElementById("numPadLive").addEventListener("mouseleave", modifyRules)
+
 for (const viewButton of document.getElementById("moveViewport").getElementsByTagName("input")) {
     viewButton.addEventListener("click", shiftViewport)
 }
@@ -52,6 +57,35 @@ function create2dArray(length, height) {
     return arr;
 }
 
+let ruleLocation=document.getElementById("numPadBirth")
+modifyRule()
+ruleLocation=document.getElementById("numPadLive")
+modifyRule()
+
+function modifyRules(event){
+    ruleLocation=document.getElementById(event.target.id)
+    modifyRule()
+}
+
+function modifyRule(){
+    if(ruleLocation === document.getElementById("numPadLive")){
+        live = []
+    }else if(ruleLocation === document.getElementById("numPadBirth")){
+        birth = []
+    }
+    let theseElements = ruleLocation.getElementsByTagName("input")
+    let iterator=0
+    for (const thisElement of theseElements) {
+        if(thisElement.checked){
+            if(ruleLocation === document.getElementById("numPadLive")){
+                live.push(Number.parseInt(thisElement.id.at(1)))
+            }else if(ruleLocation === document.getElementById("numPadBirth")){
+                birth.push(Number.parseInt(thisElement.id.at(1)))
+            }
+        }
+        iterator++
+    }
+}
 //draws a cell, given two coordinates, starting from the flattened coordinates and ending at the flattened coordinate + cell size.
 //written to expect x and y values of a mouse clicking on the canvas, in other contexts like loops, I will need to multiply the coords by 10.
 function drawCell(x, y) {
