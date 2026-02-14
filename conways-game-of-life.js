@@ -22,7 +22,7 @@ let brushGrid;
 let kernelGrid;
 let live= [];
 let birth = [];
-
+let randomNum=0;
 context.fillStyle = deadColor; // Background color
 context.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with the background color
 
@@ -48,6 +48,32 @@ for (const viewButton of document.getElementById("moveViewport").getElementsByTa
 }
 
 updateKernel();
+document.getElementById("randRes").addEventListener("click", setRan)
+
+let secretNum = 3;
+function setRan(){
+    randomNum = document.getElementById("randSeed").value
+    secretNum=3;
+}
+setRan()
+function progressRandom(){
+    if (randomNum%2 === 0 && randomNum !== 0){
+        randomNum/=2
+    }else{
+        secretNum+=7
+        secretNum%=100
+        randomNum *= 2
+        if(secretNum%2===0){
+            randomNum+=1
+        }else{
+            randomNum += secretNum
+        }
+    }
+    if (randomNum > 1000000000){
+        randomNum %= 1000000000
+    }
+
+}
 
 function create2dArray(length, height) {
     let arr = new Array(height);
@@ -111,8 +137,8 @@ function flattenCoordinate(v) {
 function randomizeBoard() {
     for (let i = 0; i < gridHeight; i++) {
         for (let j = 0; j < gridWidth; j++) {
-            //a random value between 0 and 2, hopefully.
-            currentGrid[i][j] = Math.floor(Math.random() * 3);
+            progressRandom()
+            currentGrid[i][j] = randomNum%3;
         }
     }
     //draw the board after randomizing the boards.
