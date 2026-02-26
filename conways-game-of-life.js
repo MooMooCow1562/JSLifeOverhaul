@@ -363,18 +363,16 @@ function drawHighlight(y1, x1) {
 
 //highlights the board and what cell you're editing on the board.
 function cellHighlight(e) {
-    drawBoard();
     let bound = canvas.getBoundingClientRect();
     if ((e.clientY - bound.top < canvas.height && e.clientX - bound.left < canvas.width) && (e.clientY - bound.top > 0 && e.clientX - bound.left > 0)) {
         let x1 = flattenCoordinate((e.clientX - bound.left) / cellSize) * cellSize;
         let y1 = flattenCoordinate((e.clientY - bound.top) / cellSize) * cellSize;
         lastMousePosition = [y1, x1]
-        drawHighlight(y1, x1);
     }
     else{
         lastMousePosition = null;
-        drawBoard();
     }
+    drawBoard();
 }
 
 function shift(into, cloneMe, xOffset, yOffset) {
