@@ -3,9 +3,17 @@ const alive = 2;
 const ghost = 1;
 const dead = 0;
 const cellSize = 5;
-const livingColor = "#666"; // Color of living cells
-const ghostColor = "#333"; // Color of ghost cells
-const deadColor = "#222"; // Color of dead cells
+let livingColor = "#666666"; // Color of living cells
+let ghostColor = "#333333"; // Color of ghost cells
+let deadColor = "#222222"; // Color of dead cells
+
+document.getElementById("liveColor").setAttribute("value", livingColor)
+document.getElementById("ghostColor").setAttribute("value", ghostColor)
+document.getElementById("deathColor").setAttribute("value", deadColor)
+
+document.getElementById("liveColor").addEventListener('change',function(){livingColor = document.getElementById("liveColor").value;drawBoard();})
+document.getElementById("ghostColor").addEventListener('change',function(){ghostColor = document.getElementById("ghostColor").value;drawBoard();})
+document.getElementById("deathColor").addEventListener('change',function(){deadColor = document.getElementById("deathColor").value;drawBoard();})
 
 const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
@@ -151,6 +159,7 @@ function randomizeBoard() {
     drawBoard();
 }
 
+let lastMousePosition;
 //draws board separately from the computations for the board.
 function drawBoard() {
     for (let y = 0; y < gridHeight; y++) {
@@ -158,6 +167,10 @@ function drawBoard() {
             drawCell(x, y);
         }
     }
+    if(lastMousePosition && lastMousePosition.length === 2){
+        drawHighlight(lastMousePosition[0],lastMousePosition[1])
+    }
+    document.getElementById("exportCanvas").parentElement.href = canvas.toDataURL("image/png")
 }
 
 //simply resets the board, for the user.
@@ -329,6 +342,25 @@ function cellToggle(e) {
     cellHighlight(e);
 }
 
+function drawHighlight(y1, x1) {
+    context.strokeStyle = "#f00";
+    context.strokeRect(0, y1, canvas.width, cellSize);
+    context.strokeRect(x1, 0, cellSize, canvas.height);
+    context.strokeRect(0, y1, canvas.width, cellSize);
+    context.strokeRect(x1, 0, cellSize, canvas.height);
+
+    context.strokeStyle = "#00f";
+    context.strokeRect(x1, y1, cellSize, cellSize);
+    context.strokeRect(x1, y1, cellSize, cellSize);
+
+    //create an overlay on the board to indicate "I'm being edited!"
+    context.strokeStyle = "#0f0";
+    context.strokeRect(0, 0, canvas.width - 1, canvas.height - 1);
+    context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+    context.strokeRect(0, 0, canvas.width - 1, canvas.height - 1);
+    context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+}
+
 //highlights the board and what cell you're editing on the board.
 function cellHighlight(e) {
     drawBoard();
@@ -336,23 +368,12 @@ function cellHighlight(e) {
     if ((e.clientY - bound.top < canvas.height && e.clientX - bound.left < canvas.width) && (e.clientY - bound.top > 0 && e.clientX - bound.left > 0)) {
         let x1 = flattenCoordinate((e.clientX - bound.left) / cellSize) * cellSize;
         let y1 = flattenCoordinate((e.clientY - bound.top) / cellSize) * cellSize;
-
-        context.strokeStyle = "#ff0000";
-        context.strokeRect(0, y1, canvas.width, cellSize);
-        context.strokeRect(x1, 0, cellSize, canvas.height);
-        context.strokeRect(0, y1, canvas.width, cellSize);
-        context.strokeRect(x1, 0, cellSize, canvas.height);
-
-        context.strokeStyle = "#0000ff";
-        context.strokeRect(x1, y1, cellSize, cellSize);
-        context.strokeRect(x1, y1, cellSize, cellSize);
-
-        //create an overlay on the board to indicate "I'm being edited!"
-        context.strokeStyle = "#00ff00";
-        context.strokeRect(0, 0, canvas.width - 1, canvas.height - 1);
-        context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
-        context.strokeRect(0, 0, canvas.width - 1, canvas.height - 1);
-        context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+        lastMousePosition = [y1, x1]
+        drawHighlight(y1, x1);
+    }
+    else{
+        lastMousePosition = null;
+        drawBoard();
     }
 }
 
@@ -407,3 +428,5 @@ function shiftViewport(event) {
         start()
     }
 }
+
+document.getElementById("exportCanvas").parentElement.href = canvas.toDataURL("image/png")

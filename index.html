@@ -20,6 +20,7 @@
     <button type="button" id="stopButton">Stop</button>
     <button type="button" id="stepButton">Step</button>
     <button type="button" id="clearButton">Clear</button>
+    <a href="" download="lifeFrame.png"><button type="button" id="exportCanvas">Download Canvas</button></a>
     <label for="speed">Speed:</label>
     <input type="number" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
     <br>
@@ -101,8 +102,18 @@
     <label for="vx0y2" hidden="hidden">_|</label>
     <label for="vx1y2" hidden="hidden">_|</label>
     <label for="vx2y2" hidden="hidden">_|</label>
+    <!-- Modify the colors of the life cell's states -->
+    <div>Change Colors:</div>
+    <div>
+        <label for="liveColor">Living: </label><input type="color" id="liveColor" value="#000000">
+        <br>
+        <label for="ghostColor" title="*Ghosts are cells that just died">Ghost: </label><input type="color" id="ghostColor" value="#000000">
+        <br>
+        <label for="deathColor">Dead: </label><input type="color" id="deathColor" value="#000000">
+    </div>
 </div>
 <br>
+<!-- the rule modifications -->
 <table>
     <tr>
         <th>
