@@ -11,9 +11,18 @@ document.getElementById("liveColor").setAttribute("value", livingColor)
 document.getElementById("ghostColor").setAttribute("value", ghostColor)
 document.getElementById("deathColor").setAttribute("value", deadColor)
 
-document.getElementById("liveColor").addEventListener('change',function(){livingColor = document.getElementById("liveColor").value;drawBoard();})
-document.getElementById("ghostColor").addEventListener('change',function(){ghostColor = document.getElementById("ghostColor").value;drawBoard();})
-document.getElementById("deathColor").addEventListener('change',function(){deadColor = document.getElementById("deathColor").value;drawBoard();})
+document.getElementById("liveColor").addEventListener('change', function () {
+    livingColor = document.getElementById("liveColor").value;
+    drawBoard();
+})
+document.getElementById("ghostColor").addEventListener('change', function () {
+    ghostColor = document.getElementById("ghostColor").value;
+    drawBoard();
+})
+document.getElementById("deathColor").addEventListener('change', function () {
+    deadColor = document.getElementById("deathColor").value;
+    drawBoard();
+})
 
 const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
@@ -96,17 +105,14 @@ function create2dArray(length, height) {
     return arr;
 }
 
-let ruleLocation = document.getElementById("numPadBirth")
-modifyRule()
-ruleLocation = document.getElementById("numPadLive")
-modifyRule()
+modifyRule(document.getElementById("numPadBirth"))
+modifyRule(document.getElementById("numPadLive"))
 
 function modifyRules(event) {
-    ruleLocation = document.getElementById(event.target.id).parentElement
-    modifyRule()
+    modifyRule(document.getElementById(event.target.id).parentElement)
 }
 
-function modifyRule() {
+function modifyRule(ruleLocation) {
     if (ruleLocation === document.getElementById("numPadLive")) {
         live = []
     } else if (ruleLocation === document.getElementById("numPadBirth")) {
@@ -159,7 +165,16 @@ function randomizeBoard() {
     drawBoard();
 }
 
+let optimizePlay = false
+
+function optimize(e) {
+    optimizePlay = e.target.checked;
+}
+
+document.getElementById("optimizePlay").addEventListener("change", optimize)
+
 let lastMousePosition;
+
 //draws board separately from the computations for the board.
 function drawBoard() {
     for (let y = 0; y < gridHeight; y++) {
@@ -167,8 +182,11 @@ function drawBoard() {
             drawCell(x, y);
         }
     }
-    if(lastMousePosition && lastMousePosition.length === 2){
-        drawHighlight(lastMousePosition[0],lastMousePosition[1])
+    if (optimizePlay && interval) {
+        return;
+    }
+    if (lastMousePosition && lastMousePosition.length === 2) {
+        drawHighlight(lastMousePosition[0], lastMousePosition[1])
     }
     document.getElementById("exportCanvas").href = canvas.toDataURL("image/png")
 }
@@ -232,7 +250,8 @@ function step() {
         }
     }
     //set the current board as a copy of the next
-    cloneInto(currentGrid, nextGrid);
+    currentGrid = nextGrid
+    nextGrid = create2dArray(gridWidth, gridHeight)
     //draw the board
     drawBoard();
 }
@@ -368,8 +387,7 @@ function cellHighlight(e) {
         let x1 = flattenCoordinate((e.clientX - bound.left) / cellSize) * cellSize;
         let y1 = flattenCoordinate((e.clientY - bound.top) / cellSize) * cellSize;
         lastMousePosition = [y1, x1]
-    }
-    else{
+    } else {
         lastMousePosition = null;
     }
     drawBoard();
