@@ -1,162 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conway's Game of Life..?</title>
-    <link rel="stylesheet" href="conways-game-of-life.css">
-    <script src="conways-game-of-life.js" defer></script>
-</head>
-<body>
-<h1>Welcome to Conway's Game of Life..?</h1>
-<!-- if you plan on fiddling with canvas size, it works best in multiples of ten, and make sure to hit the clear button to generate new boards. -->
-<canvas id="gameCanvas" width="1210" height="660"></canvas>
-<div id="controls">
-    <!--
-    basic controls
-    -->
-    <button type="button" id="randomButton" onclick="randomizeBoard()">Randomize Board</button>
-    <button type="button" id="startButton">Start</button>
-    <button type="button" id="stopButton">Stop</button>
-    <button type="button" id="stepButton">Step</button>
-    <button type="button" id="clearButton">Clear</button>
-    <a href="" download="lifeFrame.png"><button type="button" id="exportCanvas">Download Canvas</button></a>
-    <label for="speed">Speed:</label>
-    <input type="number" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Conway's Game of Life..?</title>
+        <link rel="stylesheet" href="conways-game-of-life.css">
+        <script src="conways-game-of-life.js" defer></script>
+    </head>
+    <body>
+    <h1>Welcome to Conway's Game of Life..?</h1>
+    <!-- if you plan on fiddling with canvas size, it works best in multiples of ten, and make sure to hit the clear button to generate new boards. -->
+    <canvas id="gameCanvas" width="1210" height="660"></canvas>
+    <div id="controls">
+        <!--
+        basic controls
+        -->
+        <button type="button" id="randomButton" onclick="randomizeBoard()">Randomize Board</button>
+        <button type="button" id="startButton">Start</button>
+        <button type="button" id="stopButton">Stop</button>
+        <button type="button" id="stepButton">Step</button>
+        <button type="button" id="clearButton">Clear</button>
+        <a id="exportCanvas" href="" download="lifeFrame.png">Download Canvas</a>
+        <label for="speed">Speed:</label>
+        <input type="number" id="speed" min="1" max="100" value="10" onchange="changeSpeed(value)">
+        <br>
+        <!--
+        Modifies the brush kernel
+        -->
+        <div>Brush shape:</div>
+        <div id="brushKernel" class="buttonContainer">
+            <input type="checkbox" id="x0y0">
+            <input type="checkbox" id="x1y0">
+            <input type="checkbox" id="x2y0">
+            <br>
+            <input type="checkbox" id="x0y1">
+            <input type="checkbox" id="x1y1" checked>
+            <input type="checkbox" id="x2y1">
+            <br>
+            <input type="checkbox" id="x0y2">
+            <input type="checkbox" id="x1y2">
+            <input type="checkbox" id="x2y2">
+        </div>
+        <label for="x0y0" hidden="hidden">_|</label>
+        <label for="x1y0" hidden="hidden">_|</label>
+        <label for="x2y0" hidden="hidden">_|</label>
+        <label for="x0y1" hidden="hidden">_|</label>
+        <label for="x1y1" hidden="hidden">_|</label>
+        <label for="x2y1" hidden="hidden">_|</label>
+        <label for="x0y2" hidden="hidden">_|</label>
+        <label for="x1y2" hidden="hidden">_|</label>
+        <label for="x2y2" hidden="hidden">_|</label>
+        <!--
+        Modifies the life kernel
+        -->
+        <div>Kernel shape:</div>
+        <div id="kernelKernel" class="buttonContainer">
+            <input type="checkbox" id="kx0y0" checked>
+            <input type="checkbox" id="kx1y0" checked>
+            <input type="checkbox" id="kx2y0" checked>
+            <br>
+            <input type="checkbox" id="kx0y1" checked>
+            <input type="checkbox" id="kx1y1">
+            <input type="checkbox" id="kx2y1" checked>
+            <br>
+            <input type="checkbox" id="kx0y2" checked>
+            <input type="checkbox" id="kx1y2" checked>
+            <input type="checkbox" id="kx2y2" checked>
+        </div>
+        <label for="kx0y0" hidden="hidden">_|</label>
+        <label for="kx1y0" hidden="hidden">_|</label>
+        <label for="kx2y0" hidden="hidden">_|</label>
+        <label for="kx0y1" hidden="hidden">_|</label>
+        <label for="kx1y1" hidden="hidden">_|</label>
+        <label for="kx2y1" hidden="hidden">_|</label>
+        <label for="kx0y2" hidden="hidden">_|</label>
+        <label for="kx1y2" hidden="hidden">_|</label>
+        <label for="kx2y2" hidden="hidden">_|</label>
+        <!--
+        Moves the view-port.
+        -->
+        <div>Move Viewport:</div>
+        <div id="moveViewport" class="buttonContainer">
+            <input type="button" id="vx0y0" value="•">
+            <input type="button" id="vx1y0" value="∧">
+            <input type="button" id="vx2y0" value="•">
+            <br>
+            <input type="button" id="vx0y1" value="<">
+            <input type="button" id="vx1y1" value="•" disabled>
+            <input type="button" id="vx2y1" value=">">
+            <br>
+            <input type="button" id="vx0y2" value="•">
+            <input type="button" id="vx1y2" value="ⅴ">
+            <input type="button" id="vx2y2" value="•">
+        </div>
+        <label for="vx0y0" hidden="hidden">_|</label>
+        <label for="vx1y0" hidden="hidden">_|</label>
+        <label for="vx2y0" hidden="hidden">_|</label>
+        <label for="vx0y1" hidden="hidden">_|</label>
+        <label for="vx1y1" hidden="hidden">_|</label>
+        <label for="vx2y1" hidden="hidden">_|</label>
+        <label for="vx0y2" hidden="hidden">_|</label>
+        <label for="vx1y2" hidden="hidden">_|</label>
+        <label for="vx2y2" hidden="hidden">_|</label>
+        <!-- Modify the colors of the life cell's states -->
+        <div>Change Colors:</div>
+        <div>
+            <label for="liveColor">Living: </label><input type="color" id="liveColor" value="#000000">
+            <br>
+            <label for="ghostColor" title="*Ghosts are cells that just died">Ghost: </label><input type="color" id="ghostColor" value="#000000">
+            <br>
+            <label for="deathColor">Dead: </label><input type="color" id="deathColor" value="#000000">
+        </div>
+    </div>
     <br>
-    <!--
-    Modifies the brush kernel
-    -->
-    <div>Brush shape:</div>
-    <div id="brushKernel" class="buttonContainer">
-        <input type="checkbox" id="x0y0">
-        <input type="checkbox" id="x1y0">
-        <input type="checkbox" id="x2y0">
-        <br>
-        <input type="checkbox" id="x0y1">
-        <input type="checkbox" id="x1y1" checked>
-        <input type="checkbox" id="x2y1">
-        <br>
-        <input type="checkbox" id="x0y2">
-        <input type="checkbox" id="x1y2">
-        <input type="checkbox" id="x2y2">
-    </div>
-    <label for="x0y0" hidden="hidden">_|</label>
-    <label for="x1y0" hidden="hidden">_|</label>
-    <label for="x2y0" hidden="hidden">_|</label>
-    <label for="x0y1" hidden="hidden">_|</label>
-    <label for="x1y1" hidden="hidden">_|</label>
-    <label for="x2y1" hidden="hidden">_|</label>
-    <label for="x0y2" hidden="hidden">_|</label>
-    <label for="x1y2" hidden="hidden">_|</label>
-    <label for="x2y2" hidden="hidden">_|</label>
-    <!--
-    Modifies the life kernel
-    -->
-    <div>Kernel shape:</div>
-    <div id="kernelKernel" class="buttonContainer">
-        <input type="checkbox" id="kx0y0" checked>
-        <input type="checkbox" id="kx1y0" checked>
-        <input type="checkbox" id="kx2y0" checked>
-        <br>
-        <input type="checkbox" id="kx0y1" checked>
-        <input type="checkbox" id="kx1y1">
-        <input type="checkbox" id="kx2y1" checked>
-        <br>
-        <input type="checkbox" id="kx0y2" checked>
-        <input type="checkbox" id="kx1y2" checked>
-        <input type="checkbox" id="kx2y2" checked>
-    </div>
-    <label for="kx0y0" hidden="hidden">_|</label>
-    <label for="kx1y0" hidden="hidden">_|</label>
-    <label for="kx2y0" hidden="hidden">_|</label>
-    <label for="kx0y1" hidden="hidden">_|</label>
-    <label for="kx1y1" hidden="hidden">_|</label>
-    <label for="kx2y1" hidden="hidden">_|</label>
-    <label for="kx0y2" hidden="hidden">_|</label>
-    <label for="kx1y2" hidden="hidden">_|</label>
-    <label for="kx2y2" hidden="hidden">_|</label>
-    <!--
-    Moves the view-port.
-    -->
-    <div>Move Viewport:</div>
-    <div id="moveViewport" class="buttonContainer">
-        <input type="button" id="vx0y0" value="•">
-        <input type="button" id="vx1y0" value="∧">
-        <input type="button" id="vx2y0" value="•">
-        <br>
-        <input type="button" id="vx0y1" value="<">
-        <input type="button" id="vx1y1" value="•" disabled>
-        <input type="button" id="vx2y1" value=">">
-        <br>
-        <input type="button" id="vx0y2" value="•">
-        <input type="button" id="vx1y2" value="ⅴ">
-        <input type="button" id="vx2y2" value="•">
-    </div>
-    <label for="vx0y0" hidden="hidden">_|</label>
-    <label for="vx1y0" hidden="hidden">_|</label>
-    <label for="vx2y0" hidden="hidden">_|</label>
-    <label for="vx0y1" hidden="hidden">_|</label>
-    <label for="vx1y1" hidden="hidden">_|</label>
-    <label for="vx2y1" hidden="hidden">_|</label>
-    <label for="vx0y2" hidden="hidden">_|</label>
-    <label for="vx1y2" hidden="hidden">_|</label>
-    <label for="vx2y2" hidden="hidden">_|</label>
-    <!-- Modify the colors of the life cell's states -->
-    <div>Change Colors:</div>
-    <div>
-        <label for="liveColor">Living: </label><input type="color" id="liveColor" value="#000000">
-        <br>
-        <label for="ghostColor" title="*Ghosts are cells that just died">Ghost: </label><input type="color" id="ghostColor" value="#000000">
-        <br>
-        <label for="deathColor">Dead: </label><input type="color" id="deathColor" value="#000000">
-    </div>
-</div>
-<br>
-<!-- the rule modifications -->
-<table>
-    <tr>
-        <th>
-            <div>Live by Moshing:</div>
-            <div id="numPadLive" class="numPad">
-                <label for="l0" class="firstNum">0:</label> <input type="checkbox" id="l0">
-                <label for="l1">1:</label> <input type="checkbox" id="l1">
-                <label for="l2">2:</label> <input type="checkbox" id="l2" checked>
-                <label for="l3">3:</label> <input type="checkbox" id="l3" checked>
-                <label for="l4">4:</label> <input type="checkbox" id="l4">
-                <label for="l5">5:</label> <input type="checkbox" id="l5">
-                <label for="l6">6:</label> <input type="checkbox" id="l6">
-                <label for="l7">7:</label> <input type="checkbox" id="l7">
-                <label for="l8">8:</label> <input type="checkbox" id="l8">
-                <label for="l9">9:</label> <input type="checkbox" id="l9">
-            </div>
-        </th>
-        <th>
-            <div>Birth by Moshing:</div>
-            <div id="numPadBirth" class="numPad">
-                <label for="b0" class="firstNum">0:</label> <input type="checkbox" id="b0">
-                <label for="b1">1:</label> <input type="checkbox" id="b1">
-                <label for="b2">2:</label> <input type="checkbox" id="b2">
-                <label for="b3">3:</label> <input type="checkbox" id="b3" checked>
-                <label for="b4">4:</label> <input type="checkbox" id="b4">
-                <label for="b5">5:</label> <input type="checkbox" id="b5">
-                <label for="b6">6:</label> <input type="checkbox" id="b6">
-                <label for="b7">7:</label> <input type="checkbox" id="b7">
-                <label for="b8">8:</label> <input type="checkbox" id="b8">
-                <label for="b9">9:</label> <input type="checkbox" id="b9">
-            </div>
-        </th>
-        <th>
-            <label for="randSeed">Random Seed</label>
-            <div class="buttonContainer" id="randSetter">
-                <input type="number" min="0" max="7500" value="17" id="randSeed">
-                <label for="randRes" hidden>Set to Seed</label>
-                <input type="button" id="randRes" value="Set ran to Seed">
-            </div>
-        </th>
-    </tr>
-</table>
-<br>
-<br>
-</body>
-</html>
+    <!-- the rule modifications -->
+    <table>
+        <tr>
+            <th>
+                <div>Live by Moshing:</div>
+                <div id="numPadLive" class="numPad">
+                    <label for="l0" class="firstNum">0:</label> <input type="checkbox" id="l0">
+                    <label for="l1">1:</label> <input type="checkbox" id="l1">
+                    <label for="l2">2:</label> <input type="checkbox" id="l2" checked>
+                    <label for="l3">3:</label> <input type="checkbox" id="l3" checked>
+                    <label for="l4">4:</label> <input type="checkbox" id="l4">
+                    <label for="l5">5:</label> <input type="checkbox" id="l5">
+                    <label for="l6">6:</label> <input type="checkbox" id="l6">
+                    <label for="l7">7:</label> <input type="checkbox" id="l7">
+                    <label for="l8">8:</label> <input type="checkbox" id="l8">
+                    <label for="l9">9:</label> <input type="checkbox" id="l9">
+                </div>
+            </th>
+            <th>
+                <div>Birth by Moshing:</div>
+                <div id="numPadBirth" class="numPad">
+                    <label for="b0" class="firstNum">0:</label> <input type="checkbox" id="b0">
+                    <label for="b1">1:</label> <input type="checkbox" id="b1">
+                    <label for="b2">2:</label> <input type="checkbox" id="b2">
+                    <label for="b3">3:</label> <input type="checkbox" id="b3" checked>
+                    <label for="b4">4:</label> <input type="checkbox" id="b4">
+                    <label for="b5">5:</label> <input type="checkbox" id="b5">
+                    <label for="b6">6:</label> <input type="checkbox" id="b6">
+                    <label for="b7">7:</label> <input type="checkbox" id="b7">
+                    <label for="b8">8:</label> <input type="checkbox" id="b8">
+                    <label for="b9">9:</label> <input type="checkbox" id="b9">
+                </div>
+            </th>
+            <th>
+                <label for="randSeed">Random Seed</label>
+                <div class="buttonContainer" id="randSetter">
+                    <input type="number" min="0" max="7500" value="17" id="randSeed">
+                    <label for="randRes" hidden>Set to Seed</label>
+                    <input type="button" id="randRes" value="Set ran to Seed">
+                </div>
+            </th>
+        </tr>
+    </table>
+    <br>
+    <br>
+    </body>
+    </html>

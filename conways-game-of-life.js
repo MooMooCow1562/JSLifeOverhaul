@@ -170,7 +170,7 @@ function drawBoard() {
     if(lastMousePosition && lastMousePosition.length === 2){
         drawHighlight(lastMousePosition[0],lastMousePosition[1])
     }
-    document.getElementById("exportCanvas").parentElement.href = canvas.toDataURL("image/png")
+    document.getElementById("exportCanvas").href = canvas.toDataURL("image/png")
 }
 
 //simply resets the board, for the user.
@@ -429,4 +429,4 @@ function shiftViewport(event) {
     }
 }
 
-document.getElementById("exportCanvas").parentElement.href = canvas.toDataURL("image/png")
+document.getElementById("exportCanvas").href = canvas.toDataURL("image/png")
