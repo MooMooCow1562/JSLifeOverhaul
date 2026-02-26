@@ -20,16 +20,16 @@ let nextGrid = create2dArray(gridWidth, gridHeight);
 let interval;
 let brushGrid;
 let kernelGrid;
-let live= [];
+let live = [];
 let birth = [];
-let randomNum=0;
+let randomNum = 0;
 context.fillStyle = deadColor; // Background color
 context.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with the background color
 
 canvas.addEventListener("click", cellToggle);
-canvas.addEventListener("mouseover", cellHighlight);
-canvas.addEventListener("mousemove", cellHighlight);
-canvas.addEventListener("mouseleave", cellHighlight);
+canvas.addEventListener("pointerover", cellHighlight);
+canvas.addEventListener("pointermove", cellHighlight);
+canvas.addEventListener("pointerleave", cellHighlight);
 
 document.getElementById("startButton").addEventListener("click", start)
 document.getElementById("stopButton").addEventListener("click", stop)
@@ -38,38 +38,43 @@ document.getElementById("stepButton").addEventListener("click", step)
 document.getElementById("clearButton").addEventListener("click", clearBoard)
 document.getElementById("kernelKernel").addEventListener("click", updateKernel)
 
-document.getElementById("numPadBirth").addEventListener("click", modifyRules)
-document.getElementById("numPadLive").addEventListener("click", modifyRules)
-document.getElementById("numPadBirth").addEventListener("mouseleave", modifyRules)
-document.getElementById("numPadLive").addEventListener("mouseleave", modifyRules)
+for (const child of document.getElementById("numPadBirth").getElementsByTagName("input")) {
+    child.addEventListener("click", modifyRules)
+}
+for (const child of document.getElementById("numPadLive").getElementsByTagName("input")) {
+    child.addEventListener("click", modifyRules)
+}
 
-for (const viewButton of document.getElementById("moveViewport").getElementsByTagName("input")) {
-    viewButton.addEventListener("click", shiftViewport)
+for (const child of document.getElementById("moveViewport").getElementsByTagName("input")) {
+    child.addEventListener("click", shiftViewport)
 }
 
 updateKernel();
 document.getElementById("randRes").addEventListener("click", setRan)
 
 let secretNum = 3;
-function setRan(){
+
+function setRan() {
     randomNum = document.getElementById("randSeed").value
-    secretNum=3;
+    secretNum = 3;
 }
+
 setRan()
-function progressRandom(){
-    if (randomNum%2 === 0 && randomNum !== 0){
-        randomNum/=2
-    }else{
-        secretNum+=7
-        secretNum%=100
+
+function progressRandom() {
+    if (randomNum % 2 === 0 && randomNum !== 0) {
+        randomNum /= 2
+    } else {
+        secretNum += 7
+        secretNum %= 100
         randomNum *= 2
-        if(secretNum%2===0){
-            randomNum+=1
-        }else{
+        if (secretNum % 2 === 0) {
+            randomNum += 1
+        } else {
             randomNum += secretNum
         }
     }
-    if (randomNum > 1000000000){
+    if (randomNum > 1000000000) {
         randomNum %= 1000000000
     }
 
@@ -83,35 +88,36 @@ function create2dArray(length, height) {
     return arr;
 }
 
-let ruleLocation=document.getElementById("numPadBirth")
+let ruleLocation = document.getElementById("numPadBirth")
 modifyRule()
-ruleLocation=document.getElementById("numPadLive")
+ruleLocation = document.getElementById("numPadLive")
 modifyRule()
 
-function modifyRules(event){
-    ruleLocation=document.getElementById(event.target.id)
+function modifyRules(event) {
+    ruleLocation = document.getElementById(event.target.id).parentElement
     modifyRule()
 }
 
-function modifyRule(){
-    if(ruleLocation === document.getElementById("numPadLive")){
+function modifyRule() {
+    if (ruleLocation === document.getElementById("numPadLive")) {
         live = []
-    }else if(ruleLocation === document.getElementById("numPadBirth")){
+    } else if (ruleLocation === document.getElementById("numPadBirth")) {
         birth = []
     }
     let theseElements = ruleLocation.getElementsByTagName("input")
-    let iterator=0
+    let iterator = 0
     for (const thisElement of theseElements) {
-        if(thisElement.checked){
-            if(ruleLocation === document.getElementById("numPadLive")){
+        if (thisElement.checked) {
+            if (ruleLocation === document.getElementById("numPadLive")) {
                 live.push(Number.parseInt(thisElement.id.at(1)))
-            }else if(ruleLocation === document.getElementById("numPadBirth")){
+            } else if (ruleLocation === document.getElementById("numPadBirth")) {
                 birth.push(Number.parseInt(thisElement.id.at(1)))
             }
         }
         iterator++
     }
 }
+
 //draws a cell, given two coordinates, starting from the flattened coordinates and ending at the flattened coordinate + cell size.
 //written to expect x and y values of a mouse clicking on the canvas, in other contexts like loops, I will need to multiply the coords by 10.
 function drawCell(x, y) {
@@ -138,7 +144,7 @@ function randomizeBoard() {
     for (let i = 0; i < gridHeight; i++) {
         for (let j = 0; j < gridWidth; j++) {
             progressRandom()
-            currentGrid[i][j] = randomNum%3;
+            currentGrid[i][j] = randomNum % 3;
         }
     }
     //draw the board after randomizing the boards.
@@ -233,7 +239,7 @@ function updateKernel() {
             grid[y][x] = 0;
         }
     }
-    kernelGrid=grid;
+    kernelGrid = grid;
 }
 
 //this function checks nearby cells for living cells.
@@ -262,7 +268,7 @@ function checkNeighbors(x, y) {
 }
 
 function wrap(value, dimension) {
-    return (Number(value+dimension)%dimension);
+    return (Number(value + dimension) % dimension);
 }
 
 function start() {
@@ -289,31 +295,31 @@ function changeSpeed(value) {
 //allows you to actually toggle cells.
 function cellToggle(e) {
     let bound = canvas.getBoundingClientRect();
-    let y1 = flattenCoordinate((e.clientY - bound.top)/cellSize);
-    let x1 = flattenCoordinate((e.clientX - bound.left)/cellSize);
+    let y1 = flattenCoordinate((e.clientY - bound.top) / cellSize);
+    let x1 = flattenCoordinate((e.clientX - bound.left) / cellSize);
     //console.log(y1+" "+x1);
     brushGrid = document.getElementById("brushKernel").getElementsByTagName("input");
     //create the grid on the fly-
-    let grid = create2dArray(Math.sqrt(brushGrid.length),Math.sqrt(brushGrid.length));
+    let grid = create2dArray(Math.sqrt(brushGrid.length), Math.sqrt(brushGrid.length));
     for (const cell of brushGrid) {
         //grab the x coordinate of the item.
         let x = Number(cell.id.split("x").at(1).split("y").at(0))
         //grab the y coordinate of the item.
-        let y =  Number(cell.id.split("y").at(1));
-        if(cell.checked === true){
+        let y = Number(cell.id.split("y").at(1));
+        if (cell.checked === true) {
             grid[y][x] = 1;
-        }else{
+        } else {
             grid[y][x] = 0;
         }
     }
     //and check to see where I must write to it.
-    for(let y = 0; y < Math.sqrt(brushGrid.length); y++) {
+    for (let y = 0; y < Math.sqrt(brushGrid.length); y++) {
         for (let x = 0; x < Math.sqrt(brushGrid.length); x++) {
-            if(Number(grid[y][x]) === 1){
+            if (Number(grid[y][x]) === 1) {
 
-                currentGrid[wrap(y1+(y-1),gridHeight)][wrap(x1+(x-1),gridWidth)]--;
-                if (currentGrid[wrap(y1+(y-1),gridHeight)][wrap(x1+(x-1),gridWidth)] < 0) {
-                    currentGrid[wrap(y1+(y-1),gridHeight)][wrap(x1+(x-1),gridWidth)] = 2;
+                currentGrid[wrap(y1 + (y - 1), gridHeight)][wrap(x1 + (x - 1), gridWidth)]--;
+                if (currentGrid[wrap(y1 + (y - 1), gridHeight)][wrap(x1 + (x - 1), gridWidth)] < 0) {
+                    currentGrid[wrap(y1 + (y - 1), gridHeight)][wrap(x1 + (x - 1), gridWidth)] = 2;
                 }
             }
         }
@@ -328,8 +334,8 @@ function cellHighlight(e) {
     drawBoard();
     let bound = canvas.getBoundingClientRect();
     if ((e.clientY - bound.top < canvas.height && e.clientX - bound.left < canvas.width) && (e.clientY - bound.top > 0 && e.clientX - bound.left > 0)) {
-        let x1 = flattenCoordinate((e.clientX - bound.left)/cellSize)*cellSize;
-        let y1 = flattenCoordinate((e.clientY - bound.top)/cellSize)*cellSize;
+        let x1 = flattenCoordinate((e.clientX - bound.left) / cellSize) * cellSize;
+        let y1 = flattenCoordinate((e.clientY - bound.top) / cellSize) * cellSize;
 
         context.strokeStyle = "#ff0000";
         context.strokeRect(0, y1, canvas.width, cellSize);
@@ -354,20 +360,20 @@ function shift(into, cloneMe, xOffset, yOffset) {
     //for every entry in into, clone the value in the corresponding array in cloneMe.
     for (let y = 0; y < gridHeight; y++) {
         for (let x = 0; x < gridWidth; x++) {
-            into[y][x] = cloneMe[wrap(y+yOffset, gridHeight)][wrap(x+xOffset, gridWidth)] + "";
+            into[y][x] = cloneMe[wrap(y + yOffset, gridHeight)][wrap(x + xOffset, gridWidth)] + "";
         }
     }
     cloneInto(cloneMe, into)
 }
 
-function shiftViewport(event){
+function shiftViewport(event) {
     let id = event.target.id
     let stoppedByMe = false
-    if (interval){
+    if (interval) {
         stop()
         stoppedByMe = true
     }
-    switch (id){
+    switch (id) {
         case "vx0y0":
             shift(nextGrid, currentGrid, -1, -1)
             break;
@@ -397,7 +403,7 @@ function shiftViewport(event){
             break;
     }
     drawBoard()
-    if (!interval && stoppedByMe){
+    if (!interval && stoppedByMe) {
         start()
     }
 }
