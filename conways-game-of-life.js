@@ -192,7 +192,7 @@ function drawBoard() {
             drawCell(x, y);
         }
     }
-    if (optimizePlay) {
+    if (optimizePlay && lastMousePosition) {
         drawMinimalHighlight(lastMousePosition[0], lastMousePosition[1])
         return;
     }
@@ -447,4 +447,20 @@ function shiftViewport(event) {
     if (!interval && stoppedByMe) {
         start()
     }
+}
+function TimeTest(times){
+    let startTime = Date.now()
+    let endTime;
+    let i = 0;
+    setRan()
+    randomizeBoard()
+    interval = setInterval(()=>{
+        step();
+        i++;
+        if (i===times){
+            clearInterval(interval);
+            endTime = Date.now()
+            console.log("Length was: " + (endTime-startTime) + " Milliseconds")
+        }
+    }, 1000 / speed);
 }
